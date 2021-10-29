@@ -1,0 +1,10 @@
+map $host $mappedhost {
+  include /home/polz/domain_list;
+}
+
+server {
+  listen 80;
+  location / {
+    proxy_pass http://$mappedhost$request_uri;
+  }
+}

@@ -1,0 +1,14 @@
+---
+# tasks file for ipv6-reverseproxy
+- name: Install dependencies
+  package: name={{item}} state=latest
+  with_items:
+    - nginx-full
+    - python3-flask
+    - python3-dnspython
+    - uwsgi-plugin-python3
+    - uwsgi
+- name: Configure uwsgi
+  copy: 
+- name: Configure nginx for uwsgi
+- name: Configure nginx as reverseproxy
