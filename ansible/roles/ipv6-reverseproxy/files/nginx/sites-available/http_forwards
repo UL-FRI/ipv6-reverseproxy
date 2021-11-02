@@ -1,5 +1,5 @@
 map $host $mappedhost {
-  include /home/polz/domain_list;
+  include /etc/nginx/reverseproxy/domain_list;
 }
 
 server {

@@ -1,6 +1,9 @@
 #!/bin/sh
 NGINX=/usr/sbin/nginx
-cd /home/polz/Webapp_v2/domain_lists
+cd /etc/nginx/reverseproxy
+
+/usr/local/lib/reverseproxy/list_from_dns.sh > domain_list.new
+
 if [ -e domain_list.new ]
 then
     cp domain_list domain_list.bak

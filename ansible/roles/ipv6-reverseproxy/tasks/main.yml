@@ -4,11 +4,57 @@
   package: name={{item}} state=latest
   with_items:
     - nginx-full
-    - python3-flask
-    - python3-dnspython
-    - uwsgi-plugin-python3
-    - uwsgi
-- name: Configure uwsgi
-  copy: 
-- name: Configure nginx for uwsgi
-- name: Configure nginx as reverseproxy
+    - bind9-dnsutils # dig
+    - cron
+- name: Domain list - directory
+  file:
+    dest: "/etc/nginx/reverseproxy"
+    state: directory
+- name: Domain list - file
+  file:
+    dest: "/etc/nginx/reverseproxy/domain_list"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+- name: Nginx as reverseproxy - SNI config
+  copy:
+    src: nginx/modules-available/fri_reverseproxy.conf
+    dest: /etc/nginx/modules-available/fri_reverseproxy.conf
+- name: Nginx as reverseproxy - enable SNI config
+  file:
+    src: "../modules-available/fri_reverseproxy.conf"
+    dest: "/etc/nginx/modules-enabled/99-fri_reverseproxy.conf"
+    state: link
+- name: Nginx as reverseproxy - http config
+  copy:
+    src: nginx/sites-available/http_forwards
+    dest: /etc/nginx/sites-available/http_forwards
+- name: Nginx as reverseproxy - enable http config
+  file:
+    src: "../sites-available/http_forwards"
+    dest: "/etc/nginx/sites-enabled/http_forwards"
+    state: link
+- name: Create script dir
+  file:
+    dest: "/usr/local/lib/reverseproxy"
+    state: directory
+- name: Disable default site
+  file:
+    dest: "/etc/nginx/sites-enabled/default"
+    state: absent
+- name: Copy domain list update script
+  copy:
+    src: script/list_from_dns.sh
+    dest: /usr/local/lib/reverseproxy/list_from_dns.sh
+    mode: u=rwx,g=rx,o=rx
+- name: Copy cronjob script
+  copy:
+    src: script/cronjob.sh
+    dest: /usr/local/lib/reverseproxy/cronjob.sh
+    mode: u=rwx,g=rx,o=rx
+- name: Set cronjob
+  cron:
+    name: reverseproxy
+    job: /usr/local/lib/reverseproxy/cronjob.sh
+    minute: "*/5"
+    state: present
