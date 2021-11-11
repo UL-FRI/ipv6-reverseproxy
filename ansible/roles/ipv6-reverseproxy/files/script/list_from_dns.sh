@@ -11,7 +11,7 @@ done
 for HNAME in $(echo $HNAMES | sort | uniq);
 do
     # ENDIP=$(dig +short -t AAAA ${HNAME} | head -n 1) # this does not work for cnames
-    ENDIP=$(dig +nocmd ${HNAME} AAAA +noall +answer | grep -P 'IN\tAAAA\t[a-f0-9:]*$' | sed -e 's/.*AAAA\t//' | head -n 1)
+    ENDIP=$(dig +nocmd ${HNAME} AAAA +noall +answer | grep -P 'IN[[:space:]]AAAA[[:space:]][a-f0-9:]*$' | sed -e 's/.*AAAA[\t ]//' | head -n 1)
     if [ -n "$ENDIP" ];
     then
         echo "$HNAME [${ENDIP}];";
