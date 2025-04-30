@@ -10,22 +10,25 @@ The repo contains an optional web app for editing the list of server name entrie
 2. Add the AAAA record to your DNS.
 3. Set up a reverse proxy from this repo.
 4. Add the A record pointing to this reverse proxy to your DNS.
-5. Create the host list
-  5.1. When you have control over the reverse DNS for your reverse proxy's IP:
-    5.1.1 Set your reverse lookup (PTR) entries - add the reverse entry for your new server.
-    5.1.2 Run list\_from\_dns.sh to create the host list.
-  5.2. When you rarely add hostnames, edit your hosts list manually.
-  5.3. When you have multiple users and want to reduce your workload, use the flask webapp.
+5. Create the file `domain_list` containing hostnames to forward traffic for.
 
+The `domain_list` file can be created in multiple ways:
+
+1. When you rarely add hostnames, edit `domain_list` manually.
+2. When you have control over the reverse DNS for your reverse proxy's IP:
+    1. Set your reverse lookup (PTR) entries - add the reverse entry for your new server.
+    2. Run list\_from\_dns.sh to create the host list.
+3. When you have multiple users, can not add the reverse DNS entries and want to reduce your workload - use the flask webapp.
+    
 # Nginx config
 
 The nginx config is split into multiple files.
 
-The main config is in two files under `nginx/modules/fri\_reverseproxy.conf` and ˇnginx/sites/http\_forwardsˇ. These files use an include directive on a file (`domain\_list`) which contains a list of the form:
+The main config is in two files under `nginx/modules/fri_reverseproxy.conf` and ˇnginx/sites/http\_forwardsˇ. These files use an include directive on a file (`domain_list`) which contains a list of the form:
 
-  firsthost.somedomain.net [2001:0DB8::1];
-  secondhost.somedomain.net [2001:0DB8::2];
-  otherhost.seconddomain.com [2001:0DB8::3];
+    firsthost.somedomain.net [2001:0DB8::1];
+    secondhost.somedomain.net [2001:0DB8::2];
+    otherhost.seconddomain.com [2001:0DB8::3];
 
 That is all.
 
