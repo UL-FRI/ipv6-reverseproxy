@@ -1,6 +1,10 @@
 # ipv6-reverseproxy
 
-nginx config for an IPv4 -> IPv6 reverse proxy with SNA; scripts for adding hosts, ansible roles to install the config, etc.
+nginx config for an IPv4 -> IPv6 reverse proxy with [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication).
+
+Conserves public IPv4 addresses for web servers which are directly accessible over IPv6.
+
+This repo contains scripts for adding hosts, ansible roles to install the config, etc.
 
 The repo contains an optional web app for editing the list of server name entries.
 
